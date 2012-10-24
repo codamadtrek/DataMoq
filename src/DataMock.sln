@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMock.Framework", "DataMock.Framework\DataMock.Framework.csproj", "{5CF4B8E0-65A0-4102-AB42-13AC90914C57}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "DataMock.DatabaseTests", "DataMock.DatabaseTests\DataMock.DatabaseTests.sqlproj", "{28E9639C-B486-4597-A15E-F02B8A4C8D28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMock.DataTests", "DataMock.DataTests\DataMock.DataTests.csproj", "{185F7CE5-D665-4DA8-81FE-65E76FE27BD1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{185F7CE5-D665-4DA8-81FE-65E76FE27BD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{185F7CE5-D665-4DA8-81FE-65E76FE27BD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{185F7CE5-D665-4DA8-81FE-65E76FE27BD1}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{185F7CE5-D665-4DA8-81FE-65E76FE27BD1}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{185F7CE5-D665-4DA8-81FE-65E76FE27BD1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{185F7CE5-D665-4DA8-81FE-65E76FE27BD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{185F7CE5-D665-4DA8-81FE-65E76FE27BD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{185F7CE5-D665-4DA8-81FE-65E76FE27BD1}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{185F7CE5-D665-4DA8-81FE-65E76FE27BD1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{185F7CE5-D665-4DA8-81FE-65E76FE27BD1}.Release|x86.ActiveCfg = Release|Any CPU
+		{28E9639C-B486-4597-A15E-F02B8A4C8D28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28E9639C-B486-4597-A15E-F02B8A4C8D28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28E9639C-B486-4597-A15E-F02B8A4C8D28}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{28E9639C-B486-4597-A15E-F02B8A4C8D28}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{28E9639C-B486-4597-A15E-F02B8A4C8D28}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{28E9639C-B486-4597-A15E-F02B8A4C8D28}.Debug|Mixed Platforms.Deploy.0 = Debug|Any CPU
+		{28E9639C-B486-4597-A15E-F02B8A4C8D28}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{28E9639C-B486-4597-A15E-F02B8A4C8D28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28E9639C-B486-4597-A15E-F02B8A4C8D28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28E9639C-B486-4597-A15E-F02B8A4C8D28}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{28E9639C-B486-4597-A15E-F02B8A4C8D28}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{28E9639C-B486-4597-A15E-F02B8A4C8D28}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{28E9639C-B486-4597-A15E-F02B8A4C8D28}.Release|Mixed Platforms.Deploy.0 = Release|Any CPU
+		{28E9639C-B486-4597-A15E-F02B8A4C8D28}.Release|x86.ActiveCfg = Release|Any CPU
+		{5CF4B8E0-65A0-4102-AB42-13AC90914C57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CF4B8E0-65A0-4102-AB42-13AC90914C57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CF4B8E0-65A0-4102-AB42-13AC90914C57}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5CF4B8E0-65A0-4102-AB42-13AC90914C57}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5CF4B8E0-65A0-4102-AB42-13AC90914C57}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5CF4B8E0-65A0-4102-AB42-13AC90914C57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CF4B8E0-65A0-4102-AB42-13AC90914C57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CF4B8E0-65A0-4102-AB42-13AC90914C57}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5CF4B8E0-65A0-4102-AB42-13AC90914C57}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5CF4B8E0-65A0-4102-AB42-13AC90914C57}.Release|x86.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

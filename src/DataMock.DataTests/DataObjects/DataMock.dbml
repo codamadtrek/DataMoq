@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DataMock" Class="DataMockDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=localhost;Initial Catalog=DataMock;Integrated Security=True" SettingsObjectName="DataMock.DataTests.Properties.Settings" SettingsPropertyName="DataMockConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Child" Member="Childs">
+    <Type Name="Child">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="FavoriteSubject" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Parent" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Parent_Child" Member="Parent1" ThisKey="Parent" OtherKey="Id" Type="Parent" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Parent" Member="Parents">
+    <Type Name="Parent">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="Parent_Child" Member="Childs" ThisKey="Id" OtherKey="Parent" Type="Child" />
+    </Type>
+  </Table>
+  <Table Name="dbo.People" Member="Peoples">
+    <Type Name="People">
+      <Column Name="Child" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Parent" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Function Name="dbo.NoParametersProcA" Method="NoParametersProcA">
+    <ElementType Name="NoParametersProcAResult">
+      <Column Name="Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TextMessage" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.NoParametersProcB" Method="NoParametersProcB">
+    <ElementType Name="NoParametersProcBResult">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TextMessage" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.VariableOutputProcA" Method="VariableOutputProcA">
+    <Parameter Name="count" Type="System.Int32" DbType="Int" />
+    <ElementType Name="VariableOutputProcAResult">
+      <Column Name="Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TextMessage" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.VariableOutputProcB" Method="VariableOutputProcB">
+    <Parameter Name="index" Type="System.Int32" DbType="Int" />
+    <ElementType Name="VariableOutputProcBResult">
+      <Column Name="Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TextMessage" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.DataTypesFunction" Method="DataTypesFunction" IsComposable="true">
+    <Parameter Name="int" Type="System.Int32" DbType="Int" />
+    <Parameter Name="string" Type="System.String" DbType="Char(5)" />
+    <Parameter Name="guid" Type="System.Guid" DbType="UniqueIdentifier" />
+    <Parameter Name="dateTime" Type="System.DateTime" DbType="DateTime" />
+    <ElementType Name="DataTypesFunctionResult">
+      <Column Name="c1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="c2" Type="System.String" DbType="Char(5)" CanBeNull="true" />
+      <Column Name="c3" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="c4" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </ElementType>
+  </Function>
+</Database>
