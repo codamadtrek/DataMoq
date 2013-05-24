@@ -29,39 +29,43 @@ namespace DataMock.DataTests
 			var parents = new[] { MARY, TRACY };
 			var children = new [] { JOHN, JOE, CATHERINE };
 
-			dataMock.Setup( context => context.Peoples ).Returns(
-				new People
-				{
-					Child = CATHERINE,
-					Parent = MARY
-				},
-				new People
-				{
-					Child = JOE,
-					Parent = MARY
-				},
-				new People
-				{
-					Child = JOHN,
-					Parent = MARY
-				} );
+			dataMock
+                .Setup( context => context.Peoples )
+                .Returns(
+				    new People
+				    {
+					    Child = CATHERINE,
+					    Parent = MARY
+				    },
+				    new People
+				    {
+					    Child = JOE,
+					    Parent = MARY
+				    },
+				    new People
+				    {
+					    Child = JOHN,
+					    Parent = MARY
+				    } );
 
-			dataMock.Setup( context => context.Peoples ).Returns(
-				new People
-				{
-					Child = CATHERINE,
-					Parent = TRACY
-				},
-				new People
-				{
-					Child = JOE,
-					Parent = TRACY
-				},
-				new People
-				{
-					Child = JOHN,
-					Parent = TRACY
-				} );
+			dataMock
+                .Setup( context => context.Peoples )
+                .Returns(
+				    new People
+				    {
+					    Child = CATHERINE,
+					    Parent = TRACY
+				    },
+				    new People
+				    {
+					    Child = JOE,
+					    Parent = TRACY
+				    },
+				    new People
+				    {
+					    Child = JOHN,
+					    Parent = TRACY
+				    } );
 			dataMock.Execute(Settings.Default.DataMockConnectionString);
 
 			People[] people;
@@ -95,11 +99,13 @@ namespace DataMock.DataTests
 			};
 			const string CHILD = "Robert";
 			const string PARENT = "Maude";
-			dataMock.Setup( context => context.Peoples ).Returns( new People
-			{
-				Child = CHILD,
-				Parent = PARENT
-			} );
+			dataMock
+                .Setup( context => context.Peoples )
+                .Returns( new People
+			    {
+				    Child = CHILD,
+				    Parent = PARENT
+			    } );
 			dataMock.Execute( Settings.Default.DataMockConnectionString );
 
 			using( var context = new DataMockDataContext() )
@@ -118,16 +124,18 @@ namespace DataMock.DataTests
 				Log = Console.Out
 			};
 
-			dataMock.Setup( context => context.Peoples ).Returns( new People
-			{
-				Child = "Owen",
-				Parent = "Michelle"
-			},
-			new People
-			{
-				Child = "Owen",
-				Parent = "Jacob"
-			} );
+			dataMock
+                .Setup( context => context.Peoples )
+                .Returns( new People
+			    {
+				    Child = "Owen",
+				    Parent = "Michelle"
+			    },
+			    new People
+			    {
+				    Child = "Owen",
+				    Parent = "Jacob"
+			    } );
 			dataMock.Execute( Settings.Default.DataMockConnectionString );
 
 			using( var context = new DataMockDataContext() )

@@ -4,70 +4,77 @@ using System.Linq;
 
 namespace LazyE9.DataMock.Setup
 {
-	public abstract class DatabaseObject
-	{
-		#region Constructors
+    public abstract class DatabaseObject
+    {
+        #region Constructors
 
-		protected DatabaseObject( string name )
-		{
-			DataObjectName = name;
-		}
+        protected DatabaseObject(string name)
+        {
+            DataObjectName = name;
+        }
 
-		#endregion Constructors
+        #endregion Constructors
 
-		#region DatabaseObject Members
+        #region DatabaseObject Members
 
-		public string DataObjectName
-		{
-			get;
-			private set;
-		}
+        public string DataObjectName
+        {
+            get;
+            private set;
+        }
 
-		public string CreateDropStatement()
-		{
-			string dataObjectTypeName = GetType().Name.ToUpperInvariant();
-			string dropStatement = String.Format( "DROP {0} {1}", dataObjectTypeName, DataObjectName );
-			return dropStatement;
-		}
+        public string CreateDropStatement()
+        {
+            string dropStatement = String.Format("DROP {0} {1}", DataObjectTypeName, DataObjectName);
+            return dropStatement;
+        }
 
-		#endregion DatabaseObject Members
+        #endregion DatabaseObject Members
 
-		#region Fields
+        #region Fields
 
-		private readonly IList<Result> mResults = new List<Result>();
+        private readonly IList<Result> mResults = new List<Result>();
 
-		#endregion Fields
+        #endregion Fields
 
-		#region Protected Members
+        #region Protected Members
 
-		protected string CreateResultsSelectStatement()
-		{
-			string[] clauses = mResults.Select( result => result.GetSelectStatement() ).ToArray();
-			return string.Join( "\nUNION ALL\n", clauses );
-		}
+        protected virtual string DataObjectTypeName
+        {
+            get
+            {
+                return GetType().Name.ToUpperInvariant();
+            }
+        }
 
-		protected abstract string[] GetSqlObjectTypes();
+        protected string CreateResultsSelectStatement()
+        {
+            string[] clauses = mResults.Select(result => result.GetSelectStatement()).ToArray();
+            return string.Join("\nUNION ALL\n", clauses);
+        }
 
-		#endregion Protected Members
+        protected abstract string[] GetSqlObjectTypes();
 
-		#region Internal Members
+        #endregion Protected Members
 
-		protected internal IEnumerable<string> SqlObjectTypes
-		{
-			get
-			{
-				return GetSqlObjectTypes();
-			}
-		}
+        #region Internal Members
 
-		internal void Add( Result result )
-		{
-			mResults.Add( result );
-		}
+        protected internal IEnumerable<string> SqlObjectTypes
+        {
+            get
+            {
+                return GetSqlObjectTypes();
+            }
+        }
 
-		protected internal abstract string CreateCreateDataObjectStatement();
+        internal void Add(Result result)
+        {
+            mResults.Add(result);
+        }
 
-		#endregion Internal Members
+        protected internal abstract string CreateCreateDataObjectStatement();
 
-	}
+        #endregion Internal Members
+
+    }
 }

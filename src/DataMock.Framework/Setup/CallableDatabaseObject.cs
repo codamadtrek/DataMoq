@@ -12,7 +12,7 @@ namespace LazyE9.DataMock.Setup
 			Parameters = parameters;
 		}
 
-		#endregion Constructors
+	    #endregion Constructors
 
 		#region Protected Members
 
@@ -42,7 +42,7 @@ namespace LazyE9.DataMock.Setup
 			return statement;
 		}
 
-		#endregion Internal Members
+	    #endregion Internal Members
 
 	}
 }

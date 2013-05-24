@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Linq;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
@@ -42,10 +43,47 @@ namespace LazyE9.DataMock
 			_Log( "*** DataMock ***");
 		}
 
-		public IDataMockSetup<TResult> Setup<TResult>( Expression<Func<TDataContext, IEnumerable<TResult>>> expression )
-		{
+        /// <summary>
+        /// Setup mocking for a scalar UDF.
+        /// </summary>
+        public ISingleDataMockSetup<TResult> Setup<TResult>(Expression<Func<TDataContext, TResult>> expression ) 
+        {
+            return new MockSetupExpression<TDataContext, TResult>(this, expression);
+        }
+
+        /// <summary>
+        /// Setup mocking for a table valued function or sproc that returns only one row.
+        /// </summary>
+        public ISingleDataMockSetup<TResult> Setup<TResult>(Expression<Func<TDataContext, ISingleResult<TResult>>> expression) 
+        {
+            return new MockSetupExpression<TDataContext, TResult>(this, expression);
+        }
+
+        /// <summary>
+        /// Setup mocking for a table valued function or sproc.
+        /// </summary>
+		public IMultipleDataMockSetup<TResult> Setup<TResult>( Expression<Func<TDataContext, IQueryable<TResult>>> expression )
+        {
 			return new MockSetupExpression<TDataContext, TResult>( this, expression );
 		}
+
+        /// <summary>
+        /// Setup mocking for a table valued function or sproc.
+        /// </summary>
+        public IMultipleDataMockSetup<TTableRow> Setup<TTableRow>(Expression<Func<TDataContext, Table<TTableRow>>> source) where TTableRow : class
+        {
+            ParameterExpression contextParameter = source.Parameters[0];
+
+            UnaryExpression invocation = 
+                Expression.TypeAs(
+                    Expression.Invoke(source, contextParameter), 
+                    typeof(IQueryable<TTableRow>));
+
+            Expression<Func<TDataContext, IQueryable<TTableRow>>> iQueryableExpression =
+                Expression.Lambda<Func<TDataContext, IQueryable<TTableRow>>>(invocation, contextParameter);
+            
+            return new MockSetupExpression<TDataContext, TTableRow>(this, iQueryableExpression);
+        }
 
 		#endregion DataMock Members
 

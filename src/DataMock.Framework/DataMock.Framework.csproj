@@ -41,21 +41,24 @@
     <Compile Include="CustomAttributeProviderExtensions.cs" />
     <Compile Include="DataMock.cs" />
     <Compile Include="DataMockHelper.cs" />
+    <Compile Include="ISingleDataMockSetup.cs" />
     <Compile Include="Language\Evaluator.cs" />
     <Compile Include="Language\MockSetupExpression.cs" />
-    <Compile Include="Language\ExpressionStringBuilder.cs" />
+    <Compile Include="Language\ComparisonExpressionBuilder.cs" />
     <Compile Include="Guard.cs" />
-    <Compile Include="IDataMockSetup.cs" />
+    <Compile Include="IMultipleDataMockSetup.cs" />
     <Compile Include="Match.cs" />
     <Compile Include="MemberInfoExtensions.cs" />
     <Compile Include="Setup\CallableDatabaseObject.cs" />
     <Compile Include="Setup\ConditionalResult.cs" />
     <Compile Include="Setup\DatabaseObject.cs" />
+    <Compile Include="Setup\Function.cs" />
     <Compile Include="Setup\MethodParam.cs" />
     <Compile Include="Setup\Result.cs" />
     <Compile Include="Setup\Procedure.cs" />
+    <Compile Include="Setup\ScalarFunction.cs" />
     <Compile Include="Setup\View.cs" />
-    <Compile Include="Setup\Function.cs" />
+    <Compile Include="Setup\TableValuedFunction.cs" />
     <Compile Include="Param.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -75,10 +78,10 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /s /d /y $(TargetDir)*.dll C:\working\bin\LvFusionProcode\exe
-xcopy /s /d /y $(TargetDir)*.pdb C:\working\bin\LvFusionProcode\exe
-xcopy /s /d /y $(TargetDir)*.dll C:\working\TIMS\Internal\6x\FeatureBranches\FusionProcode\Dotnet\BuildSystems\buildDependencies
-xcopy /s /d /y $(TargetDir)*.pdb C:\working\TIMS\Internal\6x\FeatureBranches\FusionProcode\Dotnet\BuildSystems\buildDependencies</PostBuildEvent>
+    <PostBuildEvent>xcopy /s /d /y $(TargetDir)*.dll C:\working\bin\Lv7T\exe
+xcopy /s /d /y $(TargetDir)*.pdb C:\working\bin\LV7T\exe
+xcopy /s /d /y $(TargetDir)*.dll C:\working\Internal\7x\Trunk\Dotnet\BuildSystems\buildDependencies
+xcopy /s /d /y $(TargetDir)*.pdb C:\working\Internal\7x\Trunk\Dotnet\BuildSystems\buildDependencies</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

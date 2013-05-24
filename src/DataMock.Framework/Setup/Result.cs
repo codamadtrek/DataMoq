@@ -2,35 +2,35 @@ using System;
 
 namespace LazyE9.DataMock.Setup
 {
-	internal class Result
-	{
-		#region Constructors
+    internal class Result
+    {
+        #region Constructors
 
-		public Result( object result )
-		{
-			ResultData = result;
-		}
+        public Result(object result)
+        {
+            ResultData = result;
+        }
 
-		#endregion Constructors
+        #endregion Constructors
 
-		#region Result Members
+        #region Result Members
 
-		public virtual string GetSelectStatement()
-		{
-			return DataMockHelper.ResultToSelectStatement( ResultData, String.Empty );
-		}
+        public virtual string GetSelectStatement()
+        {
+            return DataMockHelper.ResultToSelectStatement(ResultData, String.Empty);
+        }
 
-		#endregion Result Members
+        #endregion Result Members
 
-		#region Protected Members
+        #region Internal Members
 
-		protected object ResultData
-		{
-			get;
-			private set;
-		}
+        internal object ResultData
+        {
+            get;
+            private set;
+        }
 
-		#endregion Protected Members
+        #endregion Internal Members
 
-	}
+    }
 }

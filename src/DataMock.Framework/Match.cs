@@ -10,7 +10,7 @@ namespace LazyE9.DataMock
 		#region Constructors
 
 		internal Match( Predicate<T> condition )
-			: this( condition, mDefaultRender )
+			: this( condition, DefaultRender )
 		{
 		}
 
@@ -24,7 +24,7 @@ namespace LazyE9.DataMock
 
 		#region Fields
 
-		private static readonly Expression<Func<T>> mDefaultRender = Expression.Lambda<Func<T>>(
+		private static readonly Expression<Func<T>> DefaultRender = Expression.Lambda<Func<T>>(
 			Expression.Call(
 				typeof( Match )
 					.GetMethod( "Matcher", BindingFlags.Static | BindingFlags.NonPublic )

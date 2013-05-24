@@ -1,5 +1,6 @@
 using System;
-using System.Collections.Generic;
+using System.Collections;
+using System.Data.Linq;
 using System.Data.Linq.Mapping;
 using System.Globalization;
 using System.Linq;
@@ -11,133 +12,176 @@ using LazyE9.DataMock.Setup;
 
 namespace LazyE9.DataMock.Language
 {
-	public class MockSetupExpression<TDataContext, TResult> : IDataMockSetup<TResult>
-	{
-		#region Constructors
+    public class MockSetupExpression<TDataContext, TResult> : IMultipleDataMockSetup<TResult>, ISingleDataMockSetup<TResult>
+    {
+        #region Constructors
 
-		public MockSetupExpression( DataMock<TDataContext> dataMock, Expression<Func<TDataContext, IEnumerable<TResult>>> expression )
-		{
-			mDataMock = dataMock;
-			Expression body = expression.Body;
-			Func<DatabaseObject> dataObjectBuilder = null;
-			switch( body.NodeType )
-			{
-				case ExpressionType.Call:
-					_Initialize( (MethodCallExpression)body, out mDataObjectName, out dataObjectBuilder, out mResultBuilder );
-					break;
-				case ExpressionType.MemberAccess:
-					_Initialize( (MemberExpression)body, out mDataObjectName, out dataObjectBuilder, out mResultBuilder );
-					break;
-			}
+        public MockSetupExpression(DataMock<TDataContext> dataMock, Expression<Func<TDataContext, TResult>> expression)
+        {
+            _CreateMockSetupExpression(dataMock, expression);
+        }
 
-			if( mDataObjectName == null || dataObjectBuilder == null || mResultBuilder == null )
-			{
-				string message = string.Format( CultureInfo.CurrentCulture, Resources.SetupNotSupported, expression );
-				throw new ArgumentException( message );
-			}
+        public MockSetupExpression(DataMock<TDataContext> dataMock, Expression<Func<TDataContext, IQueryable<TResult>>> expression)
+        {
+            _CreateMockSetupExpression(dataMock, expression);
+        }
 
-			mDataObject = mDataMock.GetOrCreateDatabaseObject( mDataObjectName, dataObjectBuilder );
-		}
+        public MockSetupExpression(DataMock<TDataContext> dataMock, Expression<Func<TDataContext, ISingleResult<TResult>>> expression)
+        {
+            _CreateMockSetupExpression(dataMock, expression);
+        }
 
-		#endregion Constructors
+        #endregion Constructors
 
-		#region MockSetupExpression Members
+        #region MockSetupExpression Members
 
-		public void Returns( params TResult[] resultValues )
-		{
-			foreach( TResult resultValue in resultValues )
-			{
-				Result resultBuilder = mResultBuilder( resultValue );
-				mDataObject.Add( resultBuilder );
-			}
-		}
+        public void Returns()
+        {
 
-		#endregion MockSetupExpression Members
+        }
 
-		#region Fields
+        public void Returns(params TResult[] resultValues)
+        {
+            foreach (TResult resultValue in resultValues)
+            {
+                Returns(resultValue);
+            }
+        }
 
-		private readonly DatabaseObject mDataObject;
-		private readonly DataMock<TDataContext> mDataMock;
-		private readonly Func<object, Result> mResultBuilder;
-		private readonly string mDataObjectName;
+        public void Returns(TResult result)
+        {
+            Result resultBuilder = mResultBuilder(result);
+            mDataObject.Add(resultBuilder);
+        }
 
-		#endregion Fields
+        #endregion MockSetupExpression Members
 
-		#region Private Members
+        #region Fields
 
-		private static void _Initialize( MethodCallExpression methodCall, out string dataObjectName, out Func<DatabaseObject> databaseObjectBuilder, out Func<object, Result> resultBuilder )
-		{
-			dataObjectName = null;
-			databaseObjectBuilder = null;
-			resultBuilder = null;
+        private DatabaseObject mDataObject;
+        private DataMock<TDataContext> mDataMock;
+        private Func<object, Result> mResultBuilder;
+        private string mDataObjectName;
 
-			MethodInfo method = methodCall.Method;
-			var functionAttribute = method.GetCustomAttribute<FunctionAttribute>();
-			if( functionAttribute != null )
-			{
-				MethodParam[] parameters = _ParseParameters( method );
-				var isFunction = functionAttribute.IsComposable;
+        #endregion Fields
 
-				var name = functionAttribute.Name;
-				dataObjectName = name;
+        #region Private Members
 
-				databaseObjectBuilder = () =>
-						isFunction
-						? new Function( name, parameters ) as DatabaseObject
-						: new Procedure( name, parameters );
+        private void _CreateMockSetupExpression(DataMock<TDataContext> dataMock, LambdaExpression expression)
+        {
+            mDataMock = dataMock;
+            Expression body = expression.Body;
+            Func<DatabaseObject> dataObjectBuilder;
 
-				resultBuilder =
-					data => new ConditionalResult( data, parameters, methodCall.Arguments.ToArray() );
-			}
-		}
+            _VisitExpression(body, out dataObjectBuilder);
 
-		private static void _Initialize( MemberExpression memberExpression, out string dataObjectName, out Func<DatabaseObject> databaseObjectBuilder, out Func<object, Result> resultBuilder )
-		{
-			dataObjectName = null;
-			databaseObjectBuilder = null;
-			resultBuilder = null;
+            if (mDataObjectName == null || dataObjectBuilder == null || mResultBuilder == null)
+            {
+                string message = string.Format(CultureInfo.CurrentCulture, Resources.SetupNotSupported, expression);
+                throw new ArgumentException(message);
+            }
 
-			if( memberExpression.Member.MemberType == MemberTypes.Property )
-			{
-				var propertyInfo = (PropertyInfo)memberExpression.Member;
-				Type propertyType = propertyInfo.PropertyType; //IEnumerable<TTable>
-				Type modelType = propertyType.GetGenericArguments().Single();
-				var tableAttribute = modelType.GetCustomAttribute<TableAttribute>();
+            mDataObject = mDataMock.GetOrCreateDatabaseObject(mDataObjectName, dataObjectBuilder);
+        }
 
-				if( tableAttribute != null )
-				{
-					string name = tableAttribute.Name;
+        private static void _Initialize(MethodCallExpression methodCall, out string dataObjectName, out Func<DatabaseObject> databaseObjectBuilder, out Func<object, Result> resultBuilder)
+        {
+            dataObjectName = null;
+            databaseObjectBuilder = null;
+            resultBuilder = null;
 
-					dataObjectName = name;
-					databaseObjectBuilder = () => new View( name );
-					resultBuilder = data => new Result( data );
-				}
-			}
-		}
+            MethodInfo method = methodCall.Method;
+            var functionAttribute = method.GetCustomAttribute<FunctionAttribute>();
+            if (functionAttribute != null)
+            {
+                MethodParam[] parameters = _ParseParameters(method);
+                bool isFunction = functionAttribute.IsComposable;
+                bool isTableValuedFunction = isFunction && typeof (IQueryable).IsAssignableFrom(method.ReturnType);
 
-		private static MethodParam[] _ParseParameters( MethodInfo methodInfo )
-		{
-			ParameterInfo[] paramInfo = methodInfo.GetParameters();
-			var paramAttributes =
-				from param in paramInfo
-				select new
-				{
-					Attribute = param.GetCustomAttribute<ParameterAttribute>(),
-					Info = param
-				};
+                var name = functionAttribute.Name;
+                dataObjectName = name;
 
-			MethodParam[] methodParams =
-				(from param in paramAttributes
-				 select new MethodParam
-				 {
-					 ParameterName = param.Attribute.Name ?? param.Info.Name,
-					 ParameterType = param.Attribute.DbType
-				 }).ToArray();
+                databaseObjectBuilder = () =>
+                        isFunction
+                        ? (isTableValuedFunction ? new TableValuedFunction(name, parameters) : new ScalarFunction(name, parameters, method.ReturnType) as DatabaseObject)
+                        : new Procedure(name, parameters);
 
-			return methodParams;
-		}
+                resultBuilder = data => new ConditionalResult(data, parameters, methodCall.Arguments.ToArray());
+            }
+        }
 
-		#endregion Private Members
+        private static void _Initialize(MemberExpression memberExpression, out string dataObjectName, out Func<DatabaseObject> databaseObjectBuilder, out Func<object, Result> resultBuilder)
+        {
+            dataObjectName = null;
+            databaseObjectBuilder = null;
+            resultBuilder = null;
 
-	}
+            if (memberExpression.Member.MemberType == MemberTypes.Property)
+            {
+                var propertyInfo = (PropertyInfo)memberExpression.Member;
+                Type propertyType = propertyInfo.PropertyType; //IEnumerable<TTable>
+                Type modelType = propertyType.GetGenericArguments().Single();
+                var tableAttribute = modelType.GetCustomAttribute<TableAttribute>();
+
+                if (tableAttribute != null)
+                {
+                    string name = tableAttribute.Name;
+
+                    dataObjectName = name;
+                    databaseObjectBuilder = () => new View(name);
+                    resultBuilder = data => new Result(data);
+                }
+            }
+        }
+
+        private static MethodParam[] _ParseParameters(MethodInfo methodInfo)
+        {
+            ParameterInfo[] paramInfo = methodInfo.GetParameters();
+            var paramAttributes =
+                from param in paramInfo
+                select new
+                {
+                    Attribute = param.GetCustomAttribute<ParameterAttribute>(),
+                    Info = param
+                };
+
+            MethodParam[] methodParams =
+                (from param in paramAttributes
+                 select new MethodParam
+                 {
+                     ParameterName = param.Attribute.Name ?? param.Info.Name,
+                     ParameterType = param.Attribute.DbType
+                 }).ToArray();
+
+            return methodParams;
+        }
+
+        private void _VisitExpression(Expression expression, out Func<DatabaseObject> dataObjectBuilder)
+        {
+            switch (expression.NodeType)
+            {
+                case ExpressionType.Call:
+                    _Initialize((MethodCallExpression)expression, out mDataObjectName, out dataObjectBuilder, out mResultBuilder);
+                    break;
+                case ExpressionType.MemberAccess:
+                    _Initialize((MemberExpression)expression, out mDataObjectName, out dataObjectBuilder, out mResultBuilder);
+                    break;
+                case ExpressionType.TypeAs:
+                    _VisitExpression(((UnaryExpression)expression).Operand, out dataObjectBuilder);
+                    break;
+                case ExpressionType.Invoke:
+                    _VisitExpression(((InvocationExpression)expression).Expression, out dataObjectBuilder);
+                    break;
+                case ExpressionType.Lambda:
+                    _VisitExpression(((LambdaExpression)expression).Body, out dataObjectBuilder);
+                    break;
+                default:
+                    dataObjectBuilder = null;
+                    break;
+            }
+        }
+
+        #endregion Private Members
+
+    }
 }

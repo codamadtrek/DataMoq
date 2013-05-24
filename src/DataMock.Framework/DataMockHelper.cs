@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using LazyE9.DataMock.Language;
 using LazyE9.DataMock.Setup;
@@ -190,12 +192,20 @@ namespace LazyE9.DataMock
 		public static string ResultToSelectStatement( object result, string whereClause )
 		{
 			var targetType = result.GetType();
-			var properties = targetType.GetProperties().Where( prop => prop.GetIndexParameters().Length == 0 );
-
-			var propertyDump = string.Join( ", ", properties.Select(
+		    PropertyInfo[] simpleProperties = targetType.GetProperties()
+                .Where(prop => prop.GetIndexParameters().Length == 0)
+                .ToArray();
+            
+			string fields = 
+                simpleProperties.Length == 0 
+                ? string.Format( "{0} AS RESULT", result)
+                : string.Join( ", ", simpleProperties.Select(
 				prop =>
 				{
-					var columnAttribute = prop.GetCustomAttributes( typeof( ColumnAttribute ), true ).Cast<ColumnAttribute>().FirstOrDefault();
+					var columnAttribute = prop
+                        .GetCustomAttributes( typeof( ColumnAttribute ), true )
+                        .Cast<ColumnAttribute>()
+                        .FirstOrDefault();
 
 					var databaseType = GetDatabaseType( prop.PropertyType, columnAttribute );
 
@@ -203,10 +213,9 @@ namespace LazyE9.DataMock
 						FormatValue( prop.GetValue( result, null ) ),
 						databaseType,
 						prop.Name );
-
 				} ).ToArray() );
 
-			return string.Format( "(SELECT {0} {1})", propertyDump, whereClause );
+			return string.Format( "(SELECT {0} {1})", fields, whereClause );
 		}
 
 		#endregion DataMockHelper Members
