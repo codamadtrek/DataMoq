@@ -15,71 +15,27 @@ namespace DataMock.DataTests
     {
         #region FunctionTests Members
 
-//        [TestMethod]
-//        public void MockFunctionWithConditionalResults()
-//        {
-//            var dataMock = new DataMock<DataMockDataContext>
-//            {
-//                Log = Console.Out
-//            };
-//
-//            var queryGuid = Guid.NewGuid();
-//            var queryDate = DateTime.Today;
-//
-//            var resultGuid = Guid.Empty;
-//            var resultDate = new DateTime(2012, 1, 1);
-//
-//            dataMock
-//                .Setup(context => context.DataTypesFunction(Param.Is<int>(v => v == 1), Param.Is<string>(v => v == "1"), Param.IsAny<Guid>(), Param.IsAny<DateTime>()))
-//                .Returns(new DataTypesFunctionResult
-//                {
-//                    c1 = 1,
-//                    c2 = "1",
-//                    c3 = resultGuid,
-//                    c4 = resultDate
-//                });
-//
-//            dataMock
-//               .Setup(context => context.DataTypesFunction(Param.Is<int>(v => v == 2), Param.Is<string>(v => v == "2"), Param.IsAny<Guid>(), Param.IsAny<DateTime>()))
-//               .Returns(new DataTypesFunctionResult
-//               {
-//                   c1 = 2,
-//                   c2 = "2",
-//                   c3 = resultGuid,
-//                   c4 = resultDate
-//               });
-//
-//            dataMock
-//               .Setup(context => context.DataTypesFunction(Param.IsAny<int>(), Param.IsAny<string>(), Param.IsAny<Guid>(), Param.IsAny<DateTime>()))
-//               .Returns(new DataTypesFunctionResult
-//               {
-//                   c1 = 3,
-//                   c2 = "3",
-//                   c3 = resultGuid,
-//                   c4 = resultDate
-//               });
-//            dataMock.Execute(Settings.Default.DataMockConnectionString);
-//
-//            using (var context = new DataMockDataContext(Settings.Default.DataMockConnectionString))
-//            {
-//                DataTypesFunctionResult one = context.DataTypesFunction(1, "1", queryGuid, queryDate).Single();
-//                DataTypesFunctionResult two = context.DataTypesFunction(2, "2", queryGuid, queryDate).Single();
-//                DataTypesFunctionResult otherOne = context.DataTypesFunction(1, "hat", queryGuid, queryDate).Single();
-//                DataTypesFunctionResult otherTwo = context.DataTypesFunction(3, "3", queryGuid, queryDate).Single();
-//
-//                Assert.AreEqual(1, one.c1);
-//                Assert.AreEqual("1", one.c2);
-//
-//                Assert.AreEqual(2, two.c1);
-//                Assert.AreEqual("2", two.c2);
-//
-//                Assert.AreEqual(3, otherOne.c1);
-//                Assert.AreEqual("3", otherOne.c2);
-//
-//                Assert.AreEqual(3, otherTwo.c1);
-//                Assert.AreEqual("3", otherTwo.c2);
-//            }
-//        }
+        [TestMethod]
+        public void MockBooleanScalarFunction()
+        {
+            var dataMock = new DataMock<DataMockDataContext>
+            {
+                Log = Console.Out
+            };
+
+            using (var context = new DataMockDataContext(Settings.Default.DataMockConnectionString))
+            {
+                Assert.AreEqual(true, context.ScalarFunctionBoolean(1));
+
+                dataMock
+                    .Setup(ctx => ctx.ScalarFunctionBoolean(Param.IsAny<int?>()))
+                    .Returns(false);
+
+                dataMock.Execute(Settings.Default.DataMockConnectionString);
+
+                Assert.AreEqual(false, context.ScalarFunctionBoolean(1));
+            }
+        }
 
         [TestMethod]
         public void MockFunctionWithExactParameters()
@@ -175,36 +131,6 @@ namespace DataMock.DataTests
                 Assert.AreEqual(result, 1);
             }
         }
-
-//        [TestMethod]
-//        public void MockScalarFunctionReturnsDependantValue()
-//        {
-//            var dataMock = new DataMock<DataMockDataContext>
-//            {
-//                Log = Console.Out
-//            };
-//
-//            Expression<Func<int?, bool>> lessThanOrEqualToTen = v => v <= 10;
-//            dataMock
-//                .Setup(context => context.ScalarFunction(Param.Is(lessThanOrEqualToTen), Param.Is(lessThanOrEqualToTen)))
-//                .Returns(1);
-//
-//            Expression<Func<int?, bool>> greaterThanTen = v => v > 10;
-//            dataMock
-//                .Setup(context => context.ScalarFunction(Param.Is(greaterThanTen), Param.Is(greaterThanTen)))
-//                .Returns(2);
-//
-//            dataMock.Execute(Settings.Default.DataMockConnectionString);
-//
-//            using (var context = new DataMockDataContext(Settings.Default.DataMockConnectionString))
-//            {
-//                Assert.AreEqual(1, context.ScalarFunction(1, 1));
-//                Assert.AreEqual(1, context.ScalarFunction(1, 10));
-//                Assert.AreEqual(1, context.ScalarFunction(10, 10));
-//                Assert.AreEqual(1, context.ScalarFunction(10, 10));
-//                Assert.AreEqual(2, context.ScalarFunction(11, 11));
-//            }
-//        }
 
         #endregion FunctionTests Members
 

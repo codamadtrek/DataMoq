@@ -44,7 +44,7 @@
     <Compile Include="ISingleDataMockSetup.cs" />
     <Compile Include="Language\Evaluator.cs" />
     <Compile Include="Language\MockSetupExpression.cs" />
-    <Compile Include="Language\ComparisonExpressionBuilder.cs" />
+    <Compile Include="Language\ExpressionStringBuilder.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="IMultipleDataMockSetup.cs" />
     <Compile Include="Match.cs" />

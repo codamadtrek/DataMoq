@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
 using System.Data.SqlClient;
@@ -198,7 +197,7 @@ namespace LazyE9.DataMock
             
 			string fields = 
                 simpleProperties.Length == 0 
-                ? string.Format( "{0} AS RESULT", result)
+                ? string.Format( "{0} AS RESULT", FormatValue(result))
                 : string.Join( ", ", simpleProperties.Select(
 				prop =>
 				{

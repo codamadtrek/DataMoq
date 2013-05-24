@@ -65,4 +65,8 @@
     <Parameter Name="param2" Type="System.Int32" DbType="Int" />
     <Return Type="System.Int32" />
   </Function>
+  <Function Name="dbo.ScalarFunctionBoolean" Method="ScalarFunctionBoolean" IsComposable="true">
+    <Parameter Name="param1" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Boolean" />
+  </Function>
 </Database>
