@@ -137,6 +137,12 @@ namespace DataMock.DataTests.DataObjects
 		{
 			return ((System.Nullable<bool>)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), param1).ReturnValue));
 		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.ScalarFunctionString", IsComposable=true)]
+		public string ScalarFunctionString([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> param1)
+		{
+			return ((string)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), param1).ReturnValue));
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Child")]

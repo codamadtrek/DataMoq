@@ -76,5 +76,6 @@
     <Build Include="dbo\Functions\dbo.DataTypesFunction.sql" />
     <Build Include="dbo\Functions\dbo.ScalarFunction.sql" />
     <Build Include="dbo\Functions\dbo.ScalarFunctionBoolean.sql" />
+    <Build Include="dbo\Functions\dbo.ScalarFunctionString.sql" />
   </ItemGroup>
 </Project>
