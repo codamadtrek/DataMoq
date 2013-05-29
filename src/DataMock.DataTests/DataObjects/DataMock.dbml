@@ -57,18 +57,6 @@
       <Column Name="TextMessage" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.DataTypesFunction" Method="DataTypesFunction" IsComposable="true">
-    <Parameter Name="int" Type="System.Int32" DbType="Int" />
-    <Parameter Name="string" Type="System.String" DbType="Char(5)" />
-    <Parameter Name="guid" Type="System.Guid" DbType="UniqueIdentifier" />
-    <Parameter Name="dateTime" Type="System.DateTime" DbType="DateTime" />
-    <ElementType Name="DataTypesFunctionResult">
-      <Column Name="c1" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="c2" Type="System.String" DbType="Char(5)" CanBeNull="true" />
-      <Column Name="c3" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="c4" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.ScalarFunction" Method="ScalarFunction" IsComposable="true">
     <Parameter Name="param1" Type="System.Int32" DbType="Int" />
     <Parameter Name="param2" Type="System.Int32" DbType="Int" />
@@ -89,6 +77,20 @@
     <Parameter Name="orderId" Type="System.Int32" DbType="Int" />
     <ElementType Name="FinalizeOrderResult">
       <Column Name="Sequence" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.DataTypesFunction" Method="DataTypesFunction" IsComposable="true">
+    <Parameter Name="int" Type="System.Int32" DbType="Int" />
+    <Parameter Name="string" Type="System.String" DbType="Char(5)" />
+    <Parameter Name="guid" Type="System.Guid" DbType="UniqueIdentifier" />
+    <Parameter Name="dateTime" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="boolean" Type="System.Boolean" DbType="Bit" />
+    <ElementType Name="DataTypesFunctionResult">
+      <Column Name="c1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="c2" Type="System.String" DbType="Char(5)" CanBeNull="true" />
+      <Column Name="c3" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="c4" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="c5" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

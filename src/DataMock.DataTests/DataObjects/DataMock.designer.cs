@@ -131,12 +131,6 @@ namespace DataMock.DataTests.DataObjects
 			return ((ISingleResult<VariableOutputProcBResult>)(result.ReturnValue));
 		}
 		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.DataTypesFunction", IsComposable=true)]
-		public IQueryable<DataTypesFunctionResult> DataTypesFunction([global::System.Data.Linq.Mapping.ParameterAttribute(Name="int", DbType="Int")] System.Nullable<int> @int, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="string", DbType="Char(5)")] string @string, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="UniqueIdentifier")] System.Nullable<System.Guid> guid, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="DateTime")] System.Nullable<System.DateTime> dateTime)
-		{
-			return this.CreateMethodCallQuery<DataTypesFunctionResult>(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), @int, @string, guid, dateTime);
-		}
-		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.ScalarFunction", IsComposable=true)]
 		public System.Nullable<int> ScalarFunction([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> param1, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> param2)
 		{
@@ -166,6 +160,12 @@ namespace DataMock.DataTests.DataObjects
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), orderId);
 			return ((ISingleResult<FinalizeOrderResult>)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.DataTypesFunction", IsComposable=true)]
+		public IQueryable<DataTypesFunctionResult> DataTypesFunction([global::System.Data.Linq.Mapping.ParameterAttribute(Name="int", DbType="Int")] System.Nullable<int> @int, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="string", DbType="Char(5)")] string @string, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="UniqueIdentifier")] System.Nullable<System.Guid> guid, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="DateTime")] System.Nullable<System.DateTime> dateTime, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Bit")] System.Nullable<bool> boolean)
+		{
+			return this.CreateMethodCallQuery<DataTypesFunctionResult>(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), @int, @string, guid, dateTime, boolean);
 		}
 	}
 	
@@ -837,6 +837,32 @@ namespace DataMock.DataTests.DataObjects
 		}
 	}
 	
+	public partial class FinalizeOrderResult
+	{
+		
+		private System.Nullable<int> _Sequence;
+		
+		public FinalizeOrderResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Sequence", DbType="Int")]
+		public System.Nullable<int> Sequence
+		{
+			get
+			{
+				return this._Sequence;
+			}
+			set
+			{
+				if ((this._Sequence != value))
+				{
+					this._Sequence = value;
+				}
+			}
+		}
+	}
+	
 	public partial class DataTypesFunctionResult
 	{
 		
@@ -847,6 +873,8 @@ namespace DataMock.DataTests.DataObjects
 		private System.Nullable<System.Guid> _c3;
 		
 		private System.Nullable<System.DateTime> _c4;
+		
+		private System.Nullable<bool> _c5;
 		
 		public DataTypesFunctionResult()
 		{
@@ -915,29 +943,19 @@ namespace DataMock.DataTests.DataObjects
 				}
 			}
 		}
-	}
-	
-	public partial class FinalizeOrderResult
-	{
 		
-		private System.Nullable<int> _Sequence;
-		
-		public FinalizeOrderResult()
-		{
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Sequence", DbType="Int")]
-		public System.Nullable<int> Sequence
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_c5", DbType="Bit")]
+		public System.Nullable<bool> c5
 		{
 			get
 			{
-				return this._Sequence;
+				return this._c5;
 			}
 			set
 			{
-				if ((this._Sequence != value))
+				if ((this._c5 != value))
 				{
-					this._Sequence = value;
+					this._c5 = value;
 				}
 			}
 		}

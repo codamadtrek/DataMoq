@@ -145,14 +145,18 @@ namespace LazyE9.DataMock.Language
                     mBuilder.Append(((DateTime)value).ToString("yyyy-MM-dd HH:mm:ss"));
                     mBuilder.Append("'");
                 }
+                else if (c.Type.IsEnum)
+                {
+                    mBuilder.Append((int)value);
+                }
+                else if (value is bool)
+                {
+                    mBuilder.Append((bool)value ? "1" : "0");
+                }
                 else if (value.ToString() == value.GetType().ToString())
                 {
                     string message = String.Format("Expression could not be parsed: {0}", c);
                     throw new InvalidOperationException(message);
-                }
-                else if (c.Type.IsEnum)
-                {
-                    mBuilder.Append((int)value);
                 }
                 else
                 {

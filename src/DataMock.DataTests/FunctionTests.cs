@@ -49,30 +49,35 @@ namespace DataMock.DataTests
             const string QUERY_STRING = "TEST";
             var queryGuid = Guid.NewGuid();
             var queryDate = DateTime.Today;
+            const bool QUERY_BIT = true;
 
             const int RESULT_INT = 1;
             const string RESULT_STRING = "12345";
             var resultGuid = Guid.Empty;
             var resultDate = new DateTime(2012, 1, 1);
+            const bool RESULT_BIT = true;
+
 
             dataMock
-                .Setup(context => context.DataTypesFunction(QUERY_INT, QUERY_STRING, queryGuid, queryDate))
+                .Setup(context => context.DataTypesFunction(QUERY_INT, QUERY_STRING, queryGuid, queryDate, QUERY_BIT))
                 .Returns(new DataTypesFunctionResult
                 {
                     c1 = RESULT_INT,
                     c2 = RESULT_STRING,
                     c3 = resultGuid,
-                    c4 = resultDate
+                    c4 = resultDate,
+                    c5 = RESULT_BIT
                 });
             dataMock.Execute(Settings.Default.DataMockConnectionString);
 
             using (var context = new DataMockDataContext(Settings.Default.DataMockConnectionString))
             {
-                DataTypesFunctionResult result = context.DataTypesFunction(QUERY_INT, QUERY_STRING, queryGuid, queryDate).Single();
+                DataTypesFunctionResult result = context.DataTypesFunction(QUERY_INT, QUERY_STRING, queryGuid, queryDate, QUERY_BIT).Single();
                 Assert.AreEqual(RESULT_INT, result.c1);
                 Assert.AreEqual(RESULT_STRING, result.c2);
                 Assert.AreEqual(resultGuid, result.c3);
                 Assert.AreEqual(resultDate, result.c4);
+                Assert.AreEqual(RESULT_BIT, result.c5);
             }
         }
 
@@ -93,7 +98,7 @@ namespace DataMock.DataTests
             var resultGuid = Guid.Empty;
 
             dataMock
-                .Setup(context => context.DataTypesFunction(QUERY_INT, QUERY_STRING, new Guid("F255039E-7809-E211-BDD9-08002704F29D"), DateTime.Today))
+                .Setup(context => context.DataTypesFunction(QUERY_INT, QUERY_STRING, new Guid("F255039E-7809-E211-BDD9-08002704F29D"), DateTime.Today, Param.IsAny<bool>()))
                 .Returns(new DataTypesFunctionResult
                 {
                     c1 = RESULT_INT,
@@ -104,7 +109,7 @@ namespace DataMock.DataTests
 
             using (var context = new DataMockDataContext(Settings.Default.DataMockConnectionString))
             {
-                DataTypesFunctionResult result = context.DataTypesFunction(QUERY_INT, QUERY_STRING, queryGuid, DateTime.Today).Single();
+                DataTypesFunctionResult result = context.DataTypesFunction(QUERY_INT, QUERY_STRING, queryGuid, DateTime.Today, true).Single();
                 Assert.AreEqual(RESULT_INT, result.c1);
                 Assert.AreEqual(RESULT_STRING, result.c2);
                 Assert.AreEqual(resultGuid, result.c3);
