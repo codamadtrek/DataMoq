@@ -52,7 +52,6 @@ namespace DataMock.DataTests
 			try
 			{
 				mockSetup( dataMock );
-				Assert.Fail( "Should not be mocked" );
 			}
 			catch( Exception exception )
 			{

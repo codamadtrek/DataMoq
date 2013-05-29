@@ -19,7 +19,6 @@ namespace DataMock.DataTests
 			try
 			{
 				_RunInsert();
-				Assert.Fail( "No exception thrown when inserting a Parent without a Name" );
 			}
 			catch( Exception exception )
 			{

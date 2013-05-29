@@ -138,6 +138,34 @@ namespace DataMock.DataTests
         }
 
         [TestMethod]
+        public void NullParameterValue()
+        {
+            var dataMock = new DataMock<DataMockDataContext>
+            {
+                Log = Console.Out
+            };
+
+            dataMock
+                .Setup(context => context.DataTypesFunction(null, null, null, null, null))
+                .Returns(new DataTypesFunctionResult
+                {
+                    c1 = 1,
+                    c2 = "<NULL>",
+                    c3 = Guid.Empty,
+                    c4 = DateTime.Today,
+                    c5 = true
+                });
+            dataMock.Execute(Settings.Default.DataMockConnectionString);
+
+            using (var context = new DataMockDataContext(Settings.Default.DataMockConnectionString))
+            {
+                DataTypesFunctionResult result = context.DataTypesFunction(null, null, null, null, null).SingleOrDefault();
+                Assert.IsNotNull(result);
+                Assert.AreEqual(1, result.c1);
+            }
+        }
+
+        [TestMethod]
         public void MockStringScalarFunction()
         {
             var dataMock = new DataMock<DataMockDataContext>

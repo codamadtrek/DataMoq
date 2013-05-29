@@ -44,10 +44,10 @@
     <Compile Include="ISingleDataMockSetup.cs" />
     <Compile Include="Language\Evaluator.cs" />
     <Compile Include="Language\MockSetupExpression.cs" />
-    <Compile Include="Language\ExpressionStringBuilder.cs" />
+    <Compile Include="Language\ParameterExpressionParser.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="IMultipleDataMockSetup.cs" />
-    <Compile Include="MemberInfoExtensions.cs" />
+    <Compile Include="Language\ParameterParseResult.cs" />
     <Compile Include="Setup\CallableDatabaseObject.cs" />
     <Compile Include="Setup\ConditionalResult.cs" />
     <Compile Include="Setup\DatabaseObject.cs" />

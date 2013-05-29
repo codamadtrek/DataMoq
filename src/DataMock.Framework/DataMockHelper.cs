@@ -276,11 +276,6 @@ namespace LazyE9.DataMock
             return result;
         }
 
-        private static string _ToValueString(Expression expression)
-        {
-            return ExpressionStringBuilder.GetString(expression);
-        }
-
         #endregion Private Members
 
         #region Internal Members
@@ -294,14 +289,22 @@ namespace LazyE9.DataMock
             string conjunction = "WHERE ";
             for (int index = 0; index < arguments.Length; index++)
             {
-                string value = _ToValueString(arguments[index]);
+                Expression valueExpression = arguments[index];
 
-                if (!string.IsNullOrWhiteSpace(value))
+                ParameterParseResult parameterParseResult = ParameterExpressionParser.Parse(valueExpression);
+
+                string parameterName = methodParams[index].ParameterName;
+                string parameterType = methodParams[index].ParameterType;
+                if (parameterParseResult.ExactParameterSet)
                 {
-                    whereClause.AppendFormat("{0} @{1} = CAST({2} AS {3})",
-                        conjunction, methodParams[index].ParameterName,
-                        value, methodParams[index].ParameterType);
-
+                    if (parameterParseResult.Value != null)
+                    {
+                        whereClause.AppendFormat("{0} @{1} = CAST({2} AS {3})", conjunction, parameterName, parameterParseResult.SqlValue, parameterType);
+                    }
+                    else
+                    {
+                        whereClause.AppendFormat("{0} @{1} IS NULL", conjunction, parameterName);
+                    }
                     conjunction = " AND ";
                 }
             }
