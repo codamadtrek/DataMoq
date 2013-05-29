@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 
 namespace LazyE9.DataMock.Setup
@@ -70,6 +71,16 @@ namespace LazyE9.DataMock.Setup
         internal void Add(Result result)
         {
             mResults.Add(result);
+        }
+
+        /// <summary>
+        /// Call back method invoked before CreateCreateDataObjectStatement(). Inheriting types can override this method to interrogate
+        /// the database for any additional information they need to build the create statement.
+        /// </summary>
+        /// <param name="connection">The connection to the database</param>
+        protected internal virtual void Configure(DbConnection connection)
+        {
+            
         }
 
         protected internal abstract string CreateCreateDataObjectStatement();

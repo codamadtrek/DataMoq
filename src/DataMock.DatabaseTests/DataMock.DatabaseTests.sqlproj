@@ -77,5 +77,11 @@
     <Build Include="dbo\Functions\dbo.ScalarFunction.sql" />
     <Build Include="dbo\Functions\dbo.ScalarFunctionBoolean.sql" />
     <Build Include="dbo\Functions\dbo.ScalarFunctionString.sql" />
+    <Build Include="dbo\Stored Procedures\dbo.FinalizeOrder.sql" />
+    <Build Include="dbo\Tables\dbo.Order.sql" />
+    <Build Include="dbo\Functions\dbo.GetNextOrderSequence.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="DataMock.DatabaseTests.refactorlog" />
   </ItemGroup>
 </Project>

@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Transactions;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DataMock.DataTests
 {
-	/// <summary>
-	/// Summary description for UnitTest2
-	/// </summary>
 	[TestClass]
 	public class TestBase
 	{

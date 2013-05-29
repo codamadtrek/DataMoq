@@ -56,6 +56,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="ExampleTest.cs" />
     <Compile Include="FunctionTests.cs" />
     <Compile Include="MockSetupExpressionTests.cs" />
     <Compile Include="DataObjects\DataMock.cs">

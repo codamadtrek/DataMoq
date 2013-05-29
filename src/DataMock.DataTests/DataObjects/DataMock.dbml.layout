@@ -14,7 +14,7 @@
         <elementListCompartment Id="1c831563-85b4-4868-91b0-c7df9c8798b2" absoluteBounds="1.0150000000000001, 1.46, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(3 : 1.59699625651042); (3.375 : 1.59699625651042)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(3 : 1.59699625651042); (3.375 : 1.59699625651042)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/DataMockDataContext/Parent/Parent_Child" />
       <nodes>
         <classShapeMoniker Id="30fa519b-baab-4cb1-81cc-7e510bf1a0d2" />
@@ -25,6 +25,12 @@
       <DataClassMoniker Name="/DataMockDataContext/People" />
       <nestedChildShapes>
         <elementListCompartment Id="f1c2de05-6a27-4a29-b633-818d3e3fead7" absoluteBounds="3.515, 3.21, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="0541b94c-d1d2-466e-853f-599f4f711ad0" absoluteBounds="6.375, 1.5, 2, 1.7708968098958331">
+      <DataClassMoniker Name="/DataMockDataContext/Order" />
+      <nestedChildShapes>
+        <elementListCompartment Id="185b0089-9920-4f93-8bbf-7668c8560bf6" absoluteBounds="6.3900000000000006, 1.96, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>

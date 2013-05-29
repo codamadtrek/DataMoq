@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
 using System.Globalization;
@@ -96,7 +95,7 @@ namespace LazyE9.DataMock.Language
             {
                 MethodParam[] parameters = _ParseParameters(method);
                 bool isFunction = functionAttribute.IsComposable;
-                bool isTableValuedFunction = isFunction && typeof (IQueryable).IsAssignableFrom(method.ReturnType);
+                bool isTableValuedFunction = isFunction && typeof(IQueryable).IsAssignableFrom(method.ReturnType);
 
                 var name = functionAttribute.Name;
                 dataObjectName = name;

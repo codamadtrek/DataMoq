@@ -36,6 +36,9 @@ namespace DataMock.DataTests.DataObjects
     partial void InsertParent(Parent instance);
     partial void UpdateParent(Parent instance);
     partial void DeleteParent(Parent instance);
+    partial void InsertOrder(Order instance);
+    partial void UpdateOrder(Order instance);
+    partial void DeleteOrder(Order instance);
     #endregion
 		
 		public DataMockDataContext() : 
@@ -92,6 +95,14 @@ namespace DataMock.DataTests.DataObjects
 			}
 		}
 		
+		public System.Data.Linq.Table<Order> Orders
+		{
+			get
+			{
+				return this.GetTable<Order>();
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.NoParametersProcA")]
 		public ISingleResult<NoParametersProcAResult> NoParametersProcA()
 		{
@@ -142,6 +153,19 @@ namespace DataMock.DataTests.DataObjects
 		public string ScalarFunctionString([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> param1)
 		{
 			return ((string)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), param1).ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetNextOrderSequence", IsComposable=true)]
+		public System.Nullable<int> GetNextOrderSequence()
+		{
+			return ((System.Nullable<int>)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod()))).ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.FinalizeOrder")]
+		public ISingleResult<FinalizeOrderResult> FinalizeOrder([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> orderId)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), orderId);
+			return ((ISingleResult<FinalizeOrderResult>)(result.ReturnValue));
 		}
 	}
 	
@@ -479,6 +503,164 @@ namespace DataMock.DataTests.DataObjects
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.[Order]")]
+	public partial class Order : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _OrderId;
+		
+		private string _Customer;
+		
+		private System.Nullable<System.DateTime> _DeliveryDate;
+		
+		private System.Nullable<System.DateTime> _OrderDate;
+		
+		private System.Nullable<int> _OrderSequenceNumber;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnOrderIdChanging(int value);
+    partial void OnOrderIdChanged();
+    partial void OnCustomerChanging(string value);
+    partial void OnCustomerChanged();
+    partial void OnDeliveryDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnDeliveryDateChanged();
+    partial void OnOrderDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnOrderDateChanged();
+    partial void OnOrderSequenceNumberChanging(System.Nullable<int> value);
+    partial void OnOrderSequenceNumberChanged();
+    #endregion
+		
+		public Order()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrderId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int OrderId
+		{
+			get
+			{
+				return this._OrderId;
+			}
+			set
+			{
+				if ((this._OrderId != value))
+				{
+					this.OnOrderIdChanging(value);
+					this.SendPropertyChanging();
+					this._OrderId = value;
+					this.SendPropertyChanged("OrderId");
+					this.OnOrderIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Customer", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string Customer
+		{
+			get
+			{
+				return this._Customer;
+			}
+			set
+			{
+				if ((this._Customer != value))
+				{
+					this.OnCustomerChanging(value);
+					this.SendPropertyChanging();
+					this._Customer = value;
+					this.SendPropertyChanged("Customer");
+					this.OnCustomerChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DeliveryDate", DbType="DateTime2")]
+		public System.Nullable<System.DateTime> DeliveryDate
+		{
+			get
+			{
+				return this._DeliveryDate;
+			}
+			set
+			{
+				if ((this._DeliveryDate != value))
+				{
+					this.OnDeliveryDateChanging(value);
+					this.SendPropertyChanging();
+					this._DeliveryDate = value;
+					this.SendPropertyChanged("DeliveryDate");
+					this.OnDeliveryDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrderDate", DbType="DateTime2")]
+		public System.Nullable<System.DateTime> OrderDate
+		{
+			get
+			{
+				return this._OrderDate;
+			}
+			set
+			{
+				if ((this._OrderDate != value))
+				{
+					this.OnOrderDateChanging(value);
+					this.SendPropertyChanging();
+					this._OrderDate = value;
+					this.SendPropertyChanged("OrderDate");
+					this.OnOrderDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrderSequenceNumber", DbType="Int")]
+		public System.Nullable<int> OrderSequenceNumber
+		{
+			get
+			{
+				return this._OrderSequenceNumber;
+			}
+			set
+			{
+				if ((this._OrderSequenceNumber != value))
+				{
+					this.OnOrderSequenceNumberChanging(value);
+					this.SendPropertyChanging();
+					this._OrderSequenceNumber = value;
+					this.SendPropertyChanged("OrderSequenceNumber");
+					this.OnOrderSequenceNumberChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
 	public partial class NoParametersProcAResult
 	{
 		
@@ -730,6 +912,32 @@ namespace DataMock.DataTests.DataObjects
 				if ((this._c4 != value))
 				{
 					this._c4 = value;
+				}
+			}
+		}
+	}
+	
+	public partial class FinalizeOrderResult
+	{
+		
+		private System.Nullable<int> _Sequence;
+		
+		public FinalizeOrderResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Sequence", DbType="Int")]
+		public System.Nullable<int> Sequence
+		{
+			get
+			{
+				return this._Sequence;
+			}
+			set
+			{
+				if ((this._Sequence != value))
+				{
+					this._Sequence = value;
 				}
 			}
 		}

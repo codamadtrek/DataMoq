@@ -47,7 +47,6 @@
     <Compile Include="Language\ExpressionStringBuilder.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="IMultipleDataMockSetup.cs" />
-    <Compile Include="Match.cs" />
     <Compile Include="MemberInfoExtensions.cs" />
     <Compile Include="Setup\CallableDatabaseObject.cs" />
     <Compile Include="Setup\ConditionalResult.cs" />

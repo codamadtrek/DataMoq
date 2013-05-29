@@ -93,7 +93,7 @@ namespace DataMock.DataTests
 		[TestMethod]
 		public void MockViewWithOneRow()
 		{
-			var dataMock = new DataMock<DataMockDataContext>
+            var dataMock = new DataMock<DataMockDataContext>
 			{
 				Log = Console.Out
 			};

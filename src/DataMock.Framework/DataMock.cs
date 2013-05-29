@@ -32,6 +32,8 @@ namespace LazyE9.DataMock
 
 				foreach( DatabaseObject dataObject in mSetups.Values )
 				{
+                    dataObject.Configure(connection);
+
 					string dropIfExistsStatement = _DropIfExistsStatement( dataObject );
 					string createStatement = dataObject.CreateCreateDataObjectStatement();
 

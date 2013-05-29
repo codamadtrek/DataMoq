@@ -16,28 +16,6 @@ namespace DataMock.DataTests
         #region FunctionTests Members
 
         [TestMethod]
-        public void MockStringScalarFunction()
-        {
-            var dataMock = new DataMock<DataMockDataContext>
-            {
-                Log = Console.Out
-            };
-
-            using (var context = new DataMockDataContext(Settings.Default.DataMockConnectionString))
-            {
-                Assert.AreEqual(true, context.ScalarFunctionBoolean(1));
-
-                dataMock
-                    .Setup(ctx => ctx.ScalarFunctionString(Param.IsAny<int?>()))
-                    .Returns("Mocked");
-
-                dataMock.Execute(Settings.Default.DataMockConnectionString);
-
-                Assert.AreEqual("Mocked", context.ScalarFunctionString(1));
-            }
-        }
-
-        [TestMethod]
         public void MockBooleanScalarFunction()
         {
             var dataMock = new DataMock<DataMockDataContext>
@@ -151,6 +129,28 @@ namespace DataMock.DataTests
             {
                 int? result = context.ScalarFunction(1, 1);
                 Assert.AreEqual(result, 1);
+            }
+        }
+
+        [TestMethod]
+        public void MockStringScalarFunction()
+        {
+            var dataMock = new DataMock<DataMockDataContext>
+            {
+                Log = Console.Out
+            };
+
+            using (var context = new DataMockDataContext(Settings.Default.DataMockConnectionString))
+            {
+                Assert.AreEqual(true, context.ScalarFunctionBoolean(1));
+
+                dataMock
+                    .Setup(ctx => ctx.ScalarFunctionString(Param.IsAny<int?>()))
+                    .Returns("Mocked");
+
+                dataMock.Execute(Settings.Default.DataMockConnectionString);
+
+                Assert.AreEqual("Mocked", context.ScalarFunctionString(1));
             }
         }
 

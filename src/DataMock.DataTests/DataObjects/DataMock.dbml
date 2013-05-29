@@ -22,6 +22,15 @@
       <Column Name="Parent" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
+  <Table Name="dbo.[Order]" Member="Orders">
+    <Type Name="Order">
+      <Column Name="OrderId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Customer" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="DeliveryDate" Type="System.DateTime" DbType="DateTime2" CanBeNull="true" />
+      <Column Name="OrderDate" Type="System.DateTime" DbType="DateTime2" CanBeNull="true" />
+      <Column Name="OrderSequenceNumber" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </Type>
+  </Table>
   <Function Name="dbo.NoParametersProcA" Method="NoParametersProcA">
     <ElementType Name="NoParametersProcAResult">
       <Column Name="Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
@@ -72,5 +81,14 @@
   <Function Name="dbo.ScalarFunctionString" Method="ScalarFunctionString" IsComposable="true">
     <Parameter Name="param1" Type="System.Int32" DbType="Int" />
     <Return Type="System.String" />
+  </Function>
+  <Function Name="dbo.GetNextOrderSequence" Method="GetNextOrderSequence" IsComposable="true">
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.FinalizeOrder" Method="FinalizeOrder">
+    <Parameter Name="orderId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="FinalizeOrderResult">
+      <Column Name="Sequence" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
   </Function>
 </Database>
