@@ -163,9 +163,9 @@ namespace DataMock.DataTests.DataObjects
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.DataTypesFunction", IsComposable=true)]
-		public IQueryable<DataTypesFunctionResult> DataTypesFunction([global::System.Data.Linq.Mapping.ParameterAttribute(Name="int", DbType="Int")] System.Nullable<int> @int, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="string", DbType="Char(5)")] string @string, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="UniqueIdentifier")] System.Nullable<System.Guid> guid, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="DateTime")] System.Nullable<System.DateTime> dateTime, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Bit")] System.Nullable<bool> boolean)
+		public IQueryable<DataTypesFunctionResult> DataTypesFunction([global::System.Data.Linq.Mapping.ParameterAttribute(Name="int", DbType="Int")] System.Nullable<int> @int, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="string", DbType="Char(5)")] string @string, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="UniqueIdentifier")] System.Nullable<System.Guid> guid, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="DateTime")] System.Nullable<System.DateTime> dateTime, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Bit")] System.Nullable<bool> boolean, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="char", DbType="Char(1)")] System.Nullable<char> @char)
 		{
-			return this.CreateMethodCallQuery<DataTypesFunctionResult>(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), @int, @string, guid, dateTime, boolean);
+			return this.CreateMethodCallQuery<DataTypesFunctionResult>(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), @int, @string, guid, dateTime, boolean, @char);
 		}
 	}
 	
@@ -876,6 +876,8 @@ namespace DataMock.DataTests.DataObjects
 		
 		private System.Nullable<bool> _c5;
 		
+		private System.Nullable<char> _c6;
+		
 		public DataTypesFunctionResult()
 		{
 		}
@@ -956,6 +958,22 @@ namespace DataMock.DataTests.DataObjects
 				if ((this._c5 != value))
 				{
 					this._c5 = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_c6", DbType="Char(1)")]
+		public System.Nullable<char> c6
+		{
+			get
+			{
+				return this._c6;
+			}
+			set
+			{
+				if ((this._c6 != value))
+				{
+					this._c6 = value;
 				}
 			}
 		}

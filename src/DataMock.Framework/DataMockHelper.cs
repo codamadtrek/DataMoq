@@ -136,30 +136,8 @@ namespace LazyE9.DataMock
 
         public static string FormatValue(object value)
         {
-            string result;
-            dynamic dynoValue = value;
-            if (value == null)
-            {
-                result = "NULL";
-            }
-            else if (Nullable.GetUnderlyingType(value.GetType()) != null)
-            {
-                if (dynoValue.HasValue)
-                {
-                    value = dynoValue.Value;
-                    result = _FormatNonNullable(value);
-                }
-                else
-                {
-                    result = "NULL";
-                }
-            }
-            else
-            {
-                result = _FormatNonNullable(value);
-            }
-
-            return result;
+            ParameterParseResult parseResult = ParameterExpressionParser.Parse(Expression.Constant(value));
+            return parseResult.SqlValue;
         }
 
         public static string GetDatabaseType(Type propertyType, ColumnAttribute columnAttribute)
@@ -237,43 +215,6 @@ namespace LazyE9.DataMock
 
             var recreateCommand = new SqlCommand(createMockFuctionStatement, sqlConnection);
             recreateCommand.ExecuteNonQuery();
-        }
-
-        private static string _FormatNonNullable(object value)
-        {
-            string result;
-
-            if (value == null)
-            {
-                result = "NULL";
-            }
-            else if (value is bool)
-            {
-                result = "0";
-                if ((bool)value)
-                {
-                    result = "1";
-                }
-            }
-            else if (value is string || value is Guid)
-            {
-                result = string.Format("'{0}'", value);
-            }
-            else if (value is DateTime)
-            {
-                if (((DateTime)value) < new DateTime(1753, 12, 31))
-                {
-                    value = new DateTime(1753, 12, 31);
-                }
-
-                result = string.Format("'{0}'", value);
-            }
-            else
-            {
-                result = value.ToString();
-            }
-
-            return result;
         }
 
         #endregion Private Members

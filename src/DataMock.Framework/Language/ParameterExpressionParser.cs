@@ -80,16 +80,27 @@ namespace LazyE9.DataMock.Language
             {
                 Visit(valueExpression);
             }
-            else if (mValue != null)
+            else if(mValue == null)
             {
-                if (mValue is string || mValue is Guid)
+                mBuilder.Append("NULL");
+            }
+            else
+            {
+                if (mValue is string || mValue is Guid || mValue is char)
                 {
                     mBuilder.Append("'").Append(mValue).Append("'");
                 }
                 else if (mValue is DateTime)
                 {
+                    var date = (DateTime) mValue;
+                    if (date < new DateTime(1753, 12, 31))
+                    {
+                        date = new DateTime(1753, 12, 31);
+                    }
+                    mValue = date;
+
                     mBuilder.Append("'");
-                    mBuilder.Append(((DateTime)mValue).ToString("yyyy-MM-dd HH:mm:ss"));
+                    mBuilder.Append(date.ToString("yyyy-MM-dd HH:mm:ss"));
                     mBuilder.Append("'");
                 }
                 else if (node.Type.IsEnum)
