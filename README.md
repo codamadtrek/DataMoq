@@ -1,6 +1,6 @@
 # DataMock
 
-DataMock helps you unit test complex SQL code by allowing you to mock SQL views, functions, and procedures.
+DataMock helps you unit test complex SQL code by allowing you to mock SQL tables, views, functions, and procedures.
 Mocks are specified in code using a a fluent API over Linq 2 SQL. At runtime mocks are created in the database by droping 
 the existing object, and creating a new object with the same name that satisfies the constraints of the mock. 
 
