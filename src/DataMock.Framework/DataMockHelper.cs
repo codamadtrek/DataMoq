@@ -174,7 +174,7 @@ namespace LazyE9.DataMock
                 targetType != typeof(string)
                     ? targetType
                         .GetProperties()
-                        .Where(prop => prop.GetIndexParameters().Length == 0)
+                        .Where(prop => prop.GetIndexParameters().Length == 0 && (prop.PropertyType == typeof(string) || prop.PropertyType.IsValueType))
                         .ToArray()
                     : new PropertyInfo[0];
 

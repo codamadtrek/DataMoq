@@ -11,14 +11,19 @@ namespace LazyE9.DataMock.Setup
 
         #endregion Constructors
 
-        #region Protected Members
+        #region Internal Members
 
-        protected override string DataObjectTypeName
+        protected internal override string DataObjectTypeName
         {
             get { return "FUNCTION"; }
         }
 
-        #endregion Protected Members
+        protected internal override string[] SqlObjectTypes
+        {
+            get { return new[] { "FN", "IF", "TF", "FS", "FT" }; }
+        }
+
+        #endregion Internal Members
 
     }
 }

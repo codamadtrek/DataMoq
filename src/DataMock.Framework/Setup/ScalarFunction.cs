@@ -21,8 +21,8 @@ namespace LazyE9.DataMock.Setup
         #region Fields
 
         private readonly Regex mSchemaReplacer = new Regex(@"\w+\.");
-        private string mDataType = "SQL_VARIANT";
         private readonly Type mReturnType;
+        private string mDataType = "SQL_VARIANT";
 
         #endregion Fields
 
@@ -34,14 +34,17 @@ namespace LazyE9.DataMock.Setup
             return "CREATE FUNCTION {0}\n(\n{1}\n)\nRETURNS " + mDataType + " AS \nBEGIN\nRETURN (SELECT TOP 1 RESULT FROM \n(\n{2}\n) AS CANDIDATES\n)\nEND";
         }
 
-        protected override string[] GetSqlObjectTypes()
-        {
-            return new[] { "FN", "IF", "TF", "FS", "FT" };
-        }
-
         #endregion Protected Members
 
         #region Internal Members
+
+        protected internal override string[] SqlObjectTypes
+        {
+            get
+            {
+                return new[] { "FN", "IF", "TF", "FS", "FT" };
+            }
+        }
 
         /// <summary>
         /// Interrogates the database for the correct return type of the function.

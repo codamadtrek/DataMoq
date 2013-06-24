@@ -23,26 +23,25 @@ namespace LazyE9.DataMock
 
         public void Execute(string connectionString)
         {
-            _Log(String.Format("*** DataMock ({0}) ***", connectionString));
-
-            using (var connection = new SqlConnection(connectionString))
+            _LogSql(connectionString, () =>
             {
-                connection.Open();
-                var command = connection.CreateCommand();
-
-                foreach (DatabaseObject dataObject in mSetups.Values)
+                using (var connection = new SqlConnection(connectionString))
                 {
-                    dataObject.Configure(connection);
+                    connection.Open();
+                    var command = connection.CreateCommand();
 
-                    string dropIfExistsStatement = _DropIfExistsStatement(dataObject);
-                    string createStatement = dataObject.CreateCreateDataObjectStatement();
+                    foreach (DatabaseObject dataObject in mSetups.Values)
+                    {
+                        dataObject.Configure(connection);
 
-                    _Execute(command, dropIfExistsStatement);
-                    _Execute(command, createStatement);
+                        string dropIfExistsStatement = _DropIfExistsStatement(dataObject);
+                        string createStatement = dataObject.CreateCreateDataObjectStatement();
+
+                        _Execute(command, dropIfExistsStatement);
+                        _Execute(command, createStatement);
+                    }
                 }
-            }
-
-            _Log("*** DataMock ***");
+            });
         }
 
         /// <summary>
@@ -50,24 +49,23 @@ namespace LazyE9.DataMock
         /// </summary>
         public void RemoveMocks(string connectionString)
         {
-            _Log(String.Format("*** DataMock ({0}) ***", connectionString));
-
-            using (var connection = new SqlConnection(connectionString))
+            _LogSql(connectionString, () =>
             {
-                connection.Open();
-                var command = connection.CreateCommand();
-
-                foreach (DatabaseObject dataObject in mSetups.Values
-                    .GroupBy(dataObject => dataObject.DataObjectName)
-                    .Select(grouping => grouping.First()))
+                using (var connection = new SqlConnection(connectionString))
                 {
-                    string dropIfExistsStatement = _DropIfExistsStatement(dataObject);
+                    connection.Open();
+                    var command = connection.CreateCommand();
 
-                    _Execute(command, dropIfExistsStatement);
+                    foreach (DatabaseObject dataObject in mSetups.Values
+                        .GroupBy(dataObject => dataObject.DataObjectName)
+                        .Select(grouping => grouping.First()))
+                    {
+                        string dropIfExistsStatement = _DropMockStatement(dataObject);
+
+                        _Execute(command, dropIfExistsStatement);
+                    }
                 }
-            }
-
-            _Log("*** DataMock ***");
+            });
         }
 
         /// <summary>
@@ -126,20 +124,30 @@ namespace LazyE9.DataMock
 
         private string _DropIfExistsStatement(DatabaseObject databaseObject)
         {
-            string[] types = databaseObject.SqlObjectTypes.ToArray();
+            return _DropIfExitsStatement(databaseObject.SqlObjectTypes, databaseObject.DataObjectTypeName, databaseObject.DataObjectName);
+        }
+
+        private string _DropIfExitsStatement(string[] objectTypes, string objectTypeName, string objectName)
+        {
+            string[] types = objectTypes;
             string ifExistsStatement;
             if (types.Length == 1)
             {
-                ifExistsStatement = String.Format(EXISTS_SINGLE_TYPE, databaseObject.DataObjectName, types.Single());
+                ifExistsStatement = String.Format(EXISTS_SINGLE_TYPE, objectName, types.Single());
             }
             else
             {
                 string[] stringifiedTypes = types.Select(type => String.Format("'{0}'", type)).ToArray();
                 string commaSeperatedTypes = String.Join(", ", stringifiedTypes);
-                ifExistsStatement = String.Format(EXISTS_MULTIPLE_TYPES, databaseObject.DataObjectName, commaSeperatedTypes);
+                ifExistsStatement = String.Format(EXISTS_MULTIPLE_TYPES, objectName, commaSeperatedTypes);
             }
-            string result = String.Format("{0}{1}{2}", ifExistsStatement, Environment.NewLine, databaseObject.CreateDropStatement());
+            string result = String.Format("{0}{1}DROP {2} {3}", ifExistsStatement, Environment.NewLine, objectTypeName, objectName);
             return result;
+        }
+
+        private string _DropMockStatement(DatabaseObject databaseObject)
+        {
+            return _DropIfExitsStatement(databaseObject.SqlObjectTypes, databaseObject.DataObjectTypeName, databaseObject.DataObjectName);
         }
 
         private void _Execute(SqlCommand command, string sqlCommand)
@@ -155,6 +163,13 @@ namespace LazyE9.DataMock
             {
                 Log.WriteLine(message);
             }
+        }
+
+        private void _LogSql(string connectionString, Action sqlOperations)
+        {
+            _Log(String.Format("*** DataMock ({0}) ***", connectionString));
+            sqlOperations();
+            _Log("*** DataMock ***");
         }
 
         #endregion Private Members

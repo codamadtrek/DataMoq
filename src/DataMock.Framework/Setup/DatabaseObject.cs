@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
@@ -24,12 +23,6 @@ namespace LazyE9.DataMock.Setup
             private set;
         }
 
-        public string CreateDropStatement()
-        {
-            string dropStatement = String.Format("DROP {0} {1}", DataObjectTypeName, DataObjectName);
-            return dropStatement;
-        }
-
         #endregion DatabaseObject Members
 
         #region Fields
@@ -40,7 +33,17 @@ namespace LazyE9.DataMock.Setup
 
         #region Protected Members
 
-        protected virtual string DataObjectTypeName
+        protected string CreateResultsSelectStatement()
+        {
+            string[] clauses = mResults.Select(result => result.GetSelectStatement()).ToArray();
+            return string.Join("\nUNION ALL\n", clauses);
+        }
+
+        #endregion Protected Members
+
+        #region Internal Members
+
+        protected internal virtual string DataObjectTypeName
         {
             get
             {
@@ -48,25 +51,12 @@ namespace LazyE9.DataMock.Setup
             }
         }
 
-        protected string CreateResultsSelectStatement()
+        protected internal virtual string MockDataObjectTypeName
         {
-            string[] clauses = mResults.Select(result => result.GetSelectStatement()).ToArray();
-            return string.Join("\nUNION ALL\n", clauses);
+            get { return DataObjectName; }
         }
 
-        protected abstract string[] GetSqlObjectTypes();
-
-        #endregion Protected Members
-
-        #region Internal Members
-
-        protected internal IEnumerable<string> SqlObjectTypes
-        {
-            get
-            {
-                return GetSqlObjectTypes();
-            }
-        }
+        protected internal abstract string[] SqlObjectTypes { get; }
 
         internal void Add(Result result)
         {
@@ -80,7 +70,7 @@ namespace LazyE9.DataMock.Setup
         /// <param name="connection">The connection to the database</param>
         protected internal virtual void Configure(DbConnection connection)
         {
-            
+
         }
 
         protected internal abstract string CreateCreateDataObjectStatement();

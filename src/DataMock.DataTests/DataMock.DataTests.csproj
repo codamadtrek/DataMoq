@@ -73,6 +73,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="RemoveMockTests.cs" />
     <Compile Include="SprocTests.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="DataMockHelperTests.cs" />

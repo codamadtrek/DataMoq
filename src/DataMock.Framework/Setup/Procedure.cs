@@ -18,9 +18,12 @@ namespace LazyE9.DataMock.Setup
 			return "CREATE PROCEDURE {0}\n{1}\nAS\n{2}\nRETURN";
 		}
 
-		protected override string[] GetSqlObjectTypes()
+	    protected internal override string[] SqlObjectTypes
 		{
-			return new[] { "P", "PC" };
+            get
+            {
+                return new[] { "P", "PC" };    
+            }
 		}
 
 		#endregion Protected Members
