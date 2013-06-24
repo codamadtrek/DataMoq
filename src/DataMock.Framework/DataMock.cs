@@ -11,44 +11,69 @@ using LazyE9.DataMock.Setup;
 
 namespace LazyE9.DataMock
 {
-	public class DataMock<TDataContext>
-	{
-		#region DataMock Members
+    public class DataMock<TDataContext>
+    {
+        #region DataMock Members
 
-		public TextWriter Log
-		{
-			get;
-			set;
-		}
+        public TextWriter Log
+        {
+            get;
+            set;
+        }
 
-		public void Execute( string connectionString )
-		{
-			_Log( String.Format( "*** DataMock ({0}) ***", connectionString ) );
+        public void Execute(string connectionString)
+        {
+            _Log(String.Format("*** DataMock ({0}) ***", connectionString));
 
-			using( var connection = new SqlConnection( connectionString ) )
-			{
-				connection.Open();
-				var command = connection.CreateCommand();
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
 
-				foreach( DatabaseObject dataObject in mSetups.Values )
-				{
+                foreach (DatabaseObject dataObject in mSetups.Values)
+                {
                     dataObject.Configure(connection);
 
-					string dropIfExistsStatement = _DropIfExistsStatement( dataObject );
-					string createStatement = dataObject.CreateCreateDataObjectStatement();
+                    string dropIfExistsStatement = _DropIfExistsStatement(dataObject);
+                    string createStatement = dataObject.CreateCreateDataObjectStatement();
 
-					_Execute( command, dropIfExistsStatement );
-					_Execute( command, createStatement );
-				}
-			}
+                    _Execute(command, dropIfExistsStatement);
+                    _Execute(command, createStatement);
+                }
+            }
 
-			_Log( "*** DataMock ***");
-		}
+            _Log("*** DataMock ***");
+        }
+
+        /// <summary>
+        /// Removes the mocks from the database.
+        /// </summary>
+        public void RemoveMocks(string connectionString)
+        {
+            _Log(String.Format("*** DataMock ({0}) ***", connectionString));
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+
+                foreach (DatabaseObject dataObject in mSetups.Values
+                    .GroupBy(dataObject => dataObject.DataObjectName)
+                    .Select(grouping => grouping.First()))
+                {
+                    string dropIfExistsStatement = _DropIfExistsStatement(dataObject);
+
+                    _Execute(command, dropIfExistsStatement);
+                }
+            }
+
+            _Log("*** DataMock ***");
+        }
 
         /// <summary>
         /// Setup mocking for a scalar UDF.
         /// </summary>
-        public ISingleDataMockSetup<TResult> Setup<TResult>(Expression<Func<TDataContext, TResult>> expression ) 
+        public ISingleDataMockSetup<TResult> Setup<TResult>(Expression<Func<TDataContext, TResult>> expression)
         {
             return new MockSetupExpression<TDataContext, TResult>(this, expression);
         }
@@ -56,7 +81,7 @@ namespace LazyE9.DataMock
         /// <summary>
         /// Setup mocking for a table valued function or sproc that returns only one row.
         /// </summary>
-        public ISingleDataMockSetup<TResult> Setup<TResult>(Expression<Func<TDataContext, ISingleResult<TResult>>> expression) 
+        public ISingleDataMockSetup<TResult> Setup<TResult>(Expression<Func<TDataContext, ISingleResult<TResult>>> expression)
         {
             return new MockSetupExpression<TDataContext, TResult>(this, expression);
         }
@@ -64,10 +89,10 @@ namespace LazyE9.DataMock
         /// <summary>
         /// Setup mocking for a table valued function or sproc.
         /// </summary>
-		public IMultipleDataMockSetup<TResult> Setup<TResult>( Expression<Func<TDataContext, IQueryable<TResult>>> expression )
+        public IMultipleDataMockSetup<TResult> Setup<TResult>(Expression<Func<TDataContext, IQueryable<TResult>>> expression)
         {
-			return new MockSetupExpression<TDataContext, TResult>( this, expression );
-		}
+            return new MockSetupExpression<TDataContext, TResult>(this, expression);
+        }
 
         /// <summary>
         /// Setup mocking for a table valued function or sproc.
@@ -76,78 +101,78 @@ namespace LazyE9.DataMock
         {
             ParameterExpression contextParameter = source.Parameters[0];
 
-            UnaryExpression invocation = 
+            UnaryExpression invocation =
                 Expression.TypeAs(
-                    Expression.Invoke(source, contextParameter), 
+                    Expression.Invoke(source, contextParameter),
                     typeof(IQueryable<TTableRow>));
 
             Expression<Func<TDataContext, IQueryable<TTableRow>>> iQueryableExpression =
                 Expression.Lambda<Func<TDataContext, IQueryable<TTableRow>>>(invocation, contextParameter);
-            
+
             return new MockSetupExpression<TDataContext, TTableRow>(this, iQueryableExpression);
         }
 
-		#endregion DataMock Members
+        #endregion DataMock Members
 
-		#region Fields
+        #region Fields
 
-		private const string EXISTS_SINGLE_TYPE = "IF EXISTS(SELECT NULL FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID('{0}') AND TYPE = '{1}')";
-		private const string EXISTS_MULTIPLE_TYPES = "IF EXISTS(SELECT NULL FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID('{0}') AND TYPE IN ({1}))";
-		private readonly IDictionary<string, DatabaseObject> mSetups = new Dictionary<string, DatabaseObject>();
+        private const string EXISTS_SINGLE_TYPE = "IF EXISTS(SELECT NULL FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID('{0}') AND TYPE = '{1}')";
+        private const string EXISTS_MULTIPLE_TYPES = "IF EXISTS(SELECT NULL FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID('{0}') AND TYPE IN ({1}))";
+        private readonly IDictionary<string, DatabaseObject> mSetups = new Dictionary<string, DatabaseObject>();
 
-		#endregion Fields
+        #endregion Fields
 
-		#region Private Members
+        #region Private Members
 
-		private string _DropIfExistsStatement( DatabaseObject databaseObject )
-		{
-			string[] types = databaseObject.SqlObjectTypes.ToArray();
-			string ifExistsStatement;
-			if( types.Length == 1 )
-			{
-				ifExistsStatement = String.Format( EXISTS_SINGLE_TYPE, databaseObject.DataObjectName, types.Single() );
-			}
-			else
-			{
-				string[] stringifiedTypes = types.Select( type => String.Format( "'{0}'", type ) ).ToArray();
-				string commaSeperatedTypes = String.Join( ", ", stringifiedTypes );
-				ifExistsStatement = String.Format( EXISTS_MULTIPLE_TYPES, databaseObject.DataObjectName, commaSeperatedTypes );
-			}
-			string result = String.Format( "{0}{1}{2}", ifExistsStatement, Environment.NewLine, databaseObject.CreateDropStatement() );
-			return result;
-		}
+        private string _DropIfExistsStatement(DatabaseObject databaseObject)
+        {
+            string[] types = databaseObject.SqlObjectTypes.ToArray();
+            string ifExistsStatement;
+            if (types.Length == 1)
+            {
+                ifExistsStatement = String.Format(EXISTS_SINGLE_TYPE, databaseObject.DataObjectName, types.Single());
+            }
+            else
+            {
+                string[] stringifiedTypes = types.Select(type => String.Format("'{0}'", type)).ToArray();
+                string commaSeperatedTypes = String.Join(", ", stringifiedTypes);
+                ifExistsStatement = String.Format(EXISTS_MULTIPLE_TYPES, databaseObject.DataObjectName, commaSeperatedTypes);
+            }
+            string result = String.Format("{0}{1}{2}", ifExistsStatement, Environment.NewLine, databaseObject.CreateDropStatement());
+            return result;
+        }
 
-		private void _Execute( SqlCommand command, string sqlCommand )
-		{
-			_Log( sqlCommand );
-			command.CommandText = sqlCommand;
-			command.ExecuteNonQuery();
-		}
+        private void _Execute(SqlCommand command, string sqlCommand)
+        {
+            _Log(sqlCommand);
+            command.CommandText = sqlCommand;
+            command.ExecuteNonQuery();
+        }
 
-		private void _Log( string message )
-		{
-			if( Log != null )
-			{
-				Log.WriteLine( message );
-			}
-		}
+        private void _Log(string message)
+        {
+            if (Log != null)
+            {
+                Log.WriteLine(message);
+            }
+        }
 
-		#endregion Private Members
+        #endregion Private Members
 
-		#region Internal Members
+        #region Internal Members
 
-		internal DatabaseObject GetOrCreateDatabaseObject( string databaseObjectName, Func<DatabaseObject> creator )
-		{
-			DatabaseObject result;
-			if( !mSetups.TryGetValue( databaseObjectName, out result ) )
-			{
-				result = creator();
-				mSetups.Add( databaseObjectName, result );
-			}
-			return result;
-		}
+        internal DatabaseObject GetOrCreateDatabaseObject(string databaseObjectName, Func<DatabaseObject> creator)
+        {
+            DatabaseObject result;
+            if (!mSetups.TryGetValue(databaseObjectName, out result))
+            {
+                result = creator();
+                mSetups.Add(databaseObjectName, result);
+            }
+            return result;
+        }
 
-		#endregion Internal Members
+        #endregion Internal Members
 
-	}
+    }
 }
