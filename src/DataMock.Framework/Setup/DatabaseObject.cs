@@ -56,6 +56,14 @@ namespace LazyE9.DataMock.Setup
             get { return DataObjectName; }
         }
 
+        protected internal virtual string[] PostCreateStatements
+        {
+            get
+            {
+                return new string[0];
+            }
+        }
+
         protected internal abstract string[] SqlObjectTypes { get; }
 
         internal void Add(Result result)

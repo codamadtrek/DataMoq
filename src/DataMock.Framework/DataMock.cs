@@ -39,6 +39,11 @@ namespace LazyE9.DataMock
 
                         _Execute(command, dropIfExistsStatement);
                         _Execute(command, createStatement);
+
+                        foreach (string postCreateStatement in dataObject.PostCreateStatements)
+                        {
+                            _Execute(command, postCreateStatement);
+                        }
                     }
                 }
             });

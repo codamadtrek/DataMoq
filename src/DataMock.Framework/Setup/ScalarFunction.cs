@@ -30,13 +30,23 @@ namespace LazyE9.DataMock.Setup
 
         protected override string CreateStatementFormat()
         {
-
             return "CREATE FUNCTION {0}\n(\n{1}\n)\nRETURNS " + mDataType + " AS \nBEGIN\nRETURN (SELECT TOP 1 RESULT FROM \n(\n{2}\n) AS CANDIDATES\n)\nEND";
         }
 
         #endregion Protected Members
 
         #region Internal Members
+
+        protected internal override string[] PostCreateStatements
+        {
+            get
+            {
+                return new[]
+                {
+                    string.Format("GRANT EXECUTE ON {0} TO PUBLIC", DataObjectName)
+                };
+            }
+        }
 
         protected internal override string[] SqlObjectTypes
         {
